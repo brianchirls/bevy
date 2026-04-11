@@ -255,6 +255,31 @@ fn rgb_to_srgb_simple(color: vec3<f32>) -> vec3<f32> {
     return pow(color, vec3<f32>(1.0 / 2.2));
 }
 
+// PBR Neutral tone mapping
+// https://github.com/KhronosGroup/ToneMapping/blob/main/PBR_Neutral/pbrNeutral.glsl
+fn tonemapping_pbr_neutral(color_in: vec3<f32>) -> vec3<f32> {
+    const start_compression: f32 = 0.8 - 0.04;
+    const desaturation: f32 = 0.15;
+
+    var color = color_in;
+
+    let x = min(color.r, min(color.g, color.b));
+    let offset = select(0.04, x - 6.25 * x * x, x < 0.08);
+    color = color - offset;
+
+    let peak = max(color.r, max(color.g, color.b));
+    if peak < start_compression {
+        return color;
+    }
+
+    let d = 1.0 - start_compression;
+    let new_peak = 1.0 - d * d / (peak + d - start_compression);
+    color = color * (new_peak / peak);
+
+    let g = 1.0 - 1.0 / (desaturation * (peak - new_peak) + 1.0);
+    return mix(color, vec3<f32>(new_peak), g);
+}
+
 // Source: Advanced VR Rendering, GDC 2015, Alex Vlachos, Valve, Slide 49
 // https://media.steampowered.com/apps/valve/2015/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf
 fn screen_space_dither(frag_coord: vec2<f32>) -> vec3<f32> {
@@ -372,6 +397,8 @@ fn tone_mapping(in: vec4<f32>, in_color_grading: ColorGrading) -> vec4<f32> {
     color = sample_tony_mc_mapface_lut(color);
 #else ifdef TONEMAP_METHOD_BLENDER_FILMIC
     color = sample_blender_filmic_lut(color.rgb);
+#else ifdef TONEMAP_METHOD_PBR_NEUTRAL
+    color = tonemapping_pbr_neutral(color.rgb);
 #endif
 
     // Perceptual post tonemapping grading

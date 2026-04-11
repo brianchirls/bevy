@@ -473,6 +473,7 @@ bitflags::bitflags! {
         const TONEMAP_METHOD_SOMEWHAT_BORING_DISPLAY_TRANSFORM = 5 << Self::TONEMAP_METHOD_SHIFT_BITS;
         const TONEMAP_METHOD_TONY_MC_MAPFACE    = 6 << Self::TONEMAP_METHOD_SHIFT_BITS;
         const TONEMAP_METHOD_BLENDER_FILMIC     = 7 << Self::TONEMAP_METHOD_SHIFT_BITS;
+        const TONEMAP_METHOD_PBR_NEUTRAL        = 8 << Self::TONEMAP_METHOD_SHIFT_BITS;
         const STRIP_INDEX_FORMAT_RESERVED_BITS        = Self::INDEX_FORMAT_MASK_BITS << Self::INDEX_FORMAT_SHIFT_BITS;
         const STRIP_INDEX_FORMAT_NONE                 = 0 << Self::INDEX_FORMAT_SHIFT_BITS;
         const STRIP_INDEX_FORMAT_U32                  = 1 << Self::INDEX_FORMAT_SHIFT_BITS;
@@ -632,6 +633,9 @@ impl SpecializedMeshPipeline for Mesh2dPipeline {
                 }
                 Mesh2dPipelineKey::TONEMAP_METHOD_TONY_MC_MAPFACE => {
                     shader_defs.push("TONEMAP_METHOD_TONY_MC_MAPFACE".into());
+                }
+                Mesh2dPipelineKey::TONEMAP_METHOD_PBR_NEUTRAL => {
+                    shader_defs.push("TONEMAP_METHOD_PBR_NEUTRAL".into());
                 }
                 _ => {}
             }

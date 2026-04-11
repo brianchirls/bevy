@@ -160,6 +160,9 @@ pub enum Tonemapping {
     /// Somewhat neutral. Suffers from hue shifting. Brights desaturate across the spectrum.
     /// NOTE: Requires the `tonemapping_luts` cargo feature.
     BlenderFilmic,
+    /// Designed to faithfully reproduce base color under neutral lighting, for e-commerce, architecture and CAD applications.
+    /// <https://github.com/KhronosGroup/ToneMapping/tree/main/PBR_Neutral>
+    PbrNeutral,
 }
 
 impl Tonemapping {
@@ -264,6 +267,7 @@ impl SpecializedRenderPipeline for TonemappingPipeline {
                 );
                 shader_defs.push("TONEMAP_METHOD_BLENDER_FILMIC".into());
             }
+            Tonemapping::PbrNeutral => shader_defs.push("TONEMAP_METHOD_PBR_NEUTRAL".into()),
         }
         RenderPipelineDescriptor {
             label: Some("tonemapping pipeline".into()),
@@ -390,6 +394,7 @@ pub fn get_lut_bindings<'a>(
         | Tonemapping::ReinhardLuminance
         | Tonemapping::AcesFitted
         | Tonemapping::AgX
+        | Tonemapping::PbrNeutral
         | Tonemapping::SomewhatBoringDisplayTransform => &tonemapping_luts.agx,
         Tonemapping::TonyMcMapface => &tonemapping_luts.tony_mc_mapface,
         Tonemapping::BlenderFilmic => &tonemapping_luts.blender_filmic,
