@@ -286,7 +286,7 @@ fn tonemapping_pbr_neutral(color_in: vec3<f32>) -> vec3<f32> {
     }
 
     // This doesn't exist in the specification equation. It is part of optimizing
-    // the math for compuation.
+    // the math for computation.
     let d = 1.0 - start_compression;
 
     // Maximum color channel, scaled to asymptotically approach 1.0
