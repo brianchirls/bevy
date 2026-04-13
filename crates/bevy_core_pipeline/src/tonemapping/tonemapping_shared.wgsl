@@ -300,7 +300,7 @@ fn tonemapping_pbr_neutral(color_in: vec3<f32>) -> vec3<f32> {
     // Amount to desaturate, used as the blend factor when mixing between
     // full color and desaturated.
     let g = 1.0 - 1.0 / (desaturation * (max_channel - new_max_channel) + 1.0);
-    return mix(color, vec3<f32>(new_max_channel), g);
+    return mix(color, vec3(new_max_channel), g);
 }
 
 // Source: Advanced VR Rendering, GDC 2015, Alex Vlachos, Valve, Slide 49
