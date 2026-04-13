@@ -257,6 +257,7 @@ fn rgb_to_srgb_simple(color: vec3<f32>) -> vec3<f32> {
 
 // PBR Neutral tone mapping
 // https://github.com/KhronosGroup/ToneMapping/blob/main/PBR_Neutral/pbrNeutral.glsl
+// Adapted under Apache 2.0, per https://github.com/KhronosGroup/ToneMapping/tree/main/LICENSES
 fn tonemapping_pbr_neutral(color_in: vec3<f32>) -> vec3<f32> {
     // Parameter controlling when highlight compression starts
     // (`K_s` in specification)
